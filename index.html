@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Declaración 💖</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      position: relative;
+      z-index: 10;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+      max-width: 400px;
+    }
+
+    h1 {
+      font-size: 1.5em;
+      color: #e91e63;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .si {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .no {
+      background-color: #f44336;
+      color: white;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    .mensaje {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #333;
+      font-weight: bold;
+    }
+
+    /* corazones flotando */
+    .heart {
+      position: absolute;
+      color: rgba(255, 0, 100, 0.7);
+      font-size: 20px;
+      animation: flotar 6s linear infinite;
+    }
+
+    @keyframes flotar {
+      0% {
+        transform: translateY(100vh) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    /* corazones explosión */
+    .explosion {
+      position: absolute;
+      animation: explotar 1s ease-out forwards;
+    }
+
+    @keyframes explotar {
+      0% { transform: scale(0.5); opacity: 1; }
+      100% { transform: translate(var(--x), var(--y)) scale(2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="pregunta">¿Quisieras salir conmigo😓? 💕</h1>
+    <button class="si" onclick="aceptar()">Sí</button>
+    <button class="no" id="noBtn" onclick="rechazar()">No</button>
+    <p class="mensaje" id="mensaje"></p>
+  </div>
+
+  <!-- Música de fondo -->
+  <audio id="musica" src="bochi.mp3" loop></audio>
+
+  <script>
+    let mensajes = [
+      "¿Seguro? 🤔",
+      "Piénsalo un tantito... 😏",
+      "Te arrepentirás, te lo aseguro 😮",
+      "Quizás quisiste decir que sí 😍",
+      "Vamos, di que sí 💖"
+    ];
+
+    let contador = 0;
+    const musica = document.getElementById("musica");
+
+    function aceptar() {
+      document.getElementById("pregunta").innerText = 
+        "¡Sabía que dirías que sí! 😍💕 Eres la persona más bonita del mundo 💐✨";
+      document.getElementById("mensaje").innerText = "";
+      document.getElementById("noBtn").style.display = "none"; 
+
+      // Explosión de corazones
+      for (let i = 0; i < 30; i++) {
+        explosionCorazon();
+      }
+    }
+
+    function rechazar() {
+      let mensaje = mensajes[contador % mensajes.length];
+      document.getElementById("mensaje").innerText = mensaje;
+      contador++;
+    }
+
+    // Corazones flotando de fondo
+    function crearCorazon() {
+      const corazon = document.createElement("div");
+      corazon.classList.add("heart");
+      corazon.innerText = "❤️";
+      corazon.style.left = Math.random() * 100 + "vw";
+      corazon.style.fontSize = (Math.random() * 20 + 15) + "px";
+      document.body.appendChild(corazon);
+
+      setTimeout(() => {
+        corazon.remove();
+      }, 6000);
+    }
+    setInterval(crearCorazon, 500);
+
+    // Corazones de explosión al decir que sí
+    function explosionCorazon() {
+      const corazon = document.createElement("div");
+      corazon.classList.add("explosion");
+      corazon.innerText = "💖";
+      corazon.style.left = "50%";
+      corazon.style.top = "50%";
+      corazon.style.fontSize = (Math.random() * 20 + 20) + "px";
+
+      // dirección aleatoria
+      const x = (Math.random() * 400 - 200) + "px";
+      const y = (Math.random() * 400 - 200) + "px";
+      corazon.style.setProperty("--x", x);
+      corazon.style.setProperty("--y", y);
+
+      document.body.appendChild(corazon);
+
+      setTimeout(() => {
+        corazon.remove();
+      }, 1000);
+    }
+
+    // Intentar reproducir la música desde el inicio
+    window.addEventListener("DOMContentLoaded", () => {
+      musica.play().catch(() => {
+        document.body.addEventListener("click", () => {
+          musica.play();
+        }, { once: true });
+      });
+    });
+  </script>
+</body>
+</html>
